@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { BlogModel } from "@/server/models/blogModel";
+import { BlogModel } from "@/models/blogModel";
 
 // get the blogs for a specific user
 export async function GET(request, { params }) {

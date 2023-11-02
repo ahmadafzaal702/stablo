@@ -30,7 +30,10 @@
     "src/components/shared/Button.jsx",
     "src/components/layout/Header.jsx",
     "src/app/layout.jsx",
-    ".next/types/app/(website)/users/[userId]/page.ts"
+    ".next/types/app/(website)/users/[userId]/page.ts",
+    "src/app/(website)/users/[userId]/my-blogs/page.jsx",
+    "src/context/userProvider.jsx",
+    "src/components/widgets/FeaturedBlogs.jsx"
   ],
   "exclude": ["node_modules"]
 }

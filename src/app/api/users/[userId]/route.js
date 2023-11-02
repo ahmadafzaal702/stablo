@@ -61,7 +61,7 @@ export async function PATCH(request, { params }) {
 
     return NextResponse.json(
       {
-        succcess: true,
+        success: true,
         message: "User Updated",
         updatedUser,
       },
@@ -93,7 +93,7 @@ export async function DELETE(request, { params }) {
 
     return NextResponse.json(
       {
-        succcess: true,
+        success: true,
         message: `User with username -> ${deletedUser.username} <- has been deleted`,
         deletedUser,
       },

@@ -6,13 +6,23 @@ export async function GET(request) {
   try {
     // getting the user token from cookie
     const userToken = request.cookies.get("jwtoken")?.value;
+    if (!userToken) {
+      return NextResponse.json({
+        success: false,
+        message: "User is not logged in",
+      });
+    }
     const tokenUserData = await jwt.verify(userToken, process.env.JWT_SECRET);
 
     // getting the user from Database
     const user = await userModel.findById(tokenUserData.id).select("-password");
 
     // return user as response
-    return NextResponse.json(user);
+    return NextResponse.json({
+      success: true,
+      message: "Token Exist",
+      user,
+    });
 
     // try block ends here
   } catch (error) {

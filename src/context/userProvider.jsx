@@ -6,20 +6,22 @@ import userContext from "./userContext";
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const getCurrentUser = async () => {
-      try {
-        const user = await fetch("/api/currentuser");
-        const data = await user.json();
+  // getCurrentUser
+  const getCurrentUser = async () => {
+    try {
+      const user = await fetch("/api/currentuser");
+      const data = await user.json();
 
-        if (user.ok) {
-          setUser(data);
-        }
-      } catch (error) {
-        console.log(error);
+      if (data.success) {
+        setUser(data.user);
       }
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  // Useeffect
+  useEffect(() => {
     getCurrentUser();
   }, []);
 

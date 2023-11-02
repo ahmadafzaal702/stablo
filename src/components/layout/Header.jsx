@@ -26,6 +26,9 @@ const Header = () => {
   const { user } = useContext(userContext);
   const { setUser } = useContext(userContext);
 
+  // User email before @
+  const userEmailBeforeAt = user?.email.split("@")[0];
+
   // refs for menus
   const menuRef = useRef();
   const imageRef = useRef();
@@ -38,8 +41,6 @@ const Header = () => {
     });
   }
 
-  // const isLogin = false;
-
   // logoutHandler
   const logoutHandler = async () => {
     const response = await fetch("/api/users/logout");
@@ -51,7 +52,7 @@ const Header = () => {
       toast.success(data.message);
       setTimeout(() => {
         router.push("/");
-      }, 2000);
+      }, 500);
     }
   };
   // Header FC return
@@ -91,7 +92,9 @@ const Header = () => {
                 </li>
                 {user && (
                   <li>
-                    <Link href="/blogs/my-blogs">My Blogs</Link>
+                    <Link href={`/users/${userEmailBeforeAt}/my-blogs`}>
+                      My Blogs
+                    </Link>
                   </li>
                 )}
 
@@ -109,6 +112,7 @@ const Header = () => {
                 </Link>
               </div> */}
 
+              {/* If user is not logged in */}
               {!user && (
                 <>
                   <div>
@@ -130,22 +134,22 @@ const Header = () => {
                 </>
               )}
 
+              {/* If user is logged in */}
               {user && (
                 <>
                   <div className="relative">
                     <div className="flex gap-x-2 items-center">
                       <p className="text-sm">
-                        Welcome{" "}
                         <Link
-                          href={"/users/profile"}
+                          href={`/users/${userEmailBeforeAt}`}
                           className="text-sm font-semibold underline"
                         >
-                          {user.username.split(" ")[0]}
+                          {user.username}
                         </Link>
                       </p>
-                      <Image
+                      <img
                         ref={imageRef}
-                        src={userImage}
+                        src={`${user ? user.profilePic : userImage}`}
                         className="h-12 w-12 object-cover 
                         border-2 border-gray-medium rounded-full cursor-pointer"
                         onClick={() => {
@@ -154,43 +158,35 @@ const Header = () => {
                       />
                     </div>
 
+                    {/* user account menu section */}
                     {menuOpen && (
                       <div
                         ref={menuRef}
                         className="w-52 pt-2 bg-white shadow-lg rounded absolute top-14 -left-8"
                       >
-                        <ul className="p-2">
-                          <li
-                            onClick={() => setMenuOpen(false)}
-                            className="p-2 text-sm font-semibold cursor-pointer rounded hover:bg-primary"
-                          >
-                            My Profile
+                        <ul className="p-2 userHeaderMenu">
+                          <li>
+                            <Link href={`/users/${userEmailBeforeAt}`}>
+                              My Profile
+                            </Link>
                           </li>
-                          <li className="p-2 text-sm font-semibold cursor-pointer rounded hover:bg-primary">
-                            My Blogs
+                          <li>
+                            <Link
+                              href={`/users/${userEmailBeforeAt}/create-blog`}
+                            >
+                              Create Blog
+                            </Link>
                           </li>
-                          <li className="p-2 text-sm font-semibold cursor-pointer rounded hover:bg-primary">
-                            Logout
+                          <li>
+                            <Link href={`/users/${userEmailBeforeAt}/my-blogs`}>
+                              My Blogs
+                            </Link>
                           </li>
+                          <li onClick={logoutHandler}>Logout</li>
                         </ul>
                       </div>
                     )}
                   </div>
-
-                  {/* <div className="flex gap-x-2 items-center">
-                    <div>
-                      <p className="text-xs">
-                        Welcome{" "}
-                        <Link
-                          href={"/users/profile"}
-                          className="text-xs font-semibold underline"
-                        >
-                          {user.username.split(" ")[0]}
-                        </Link>
-                      </p>
-                    </div>
-                    <Button title="Logout" clickHandler={logoutHandler} />
-                  </div> */}
                 </>
               )}
             </div>

@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 // logout api
 export async function GET(request) {
-  console.log("api hit");
   try {
     const response = NextResponse.json({
       success: true,

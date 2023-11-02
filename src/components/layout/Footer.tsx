@@ -5,7 +5,7 @@ const Footer = () => {
   // Footer FC return
   return (
     <>
-      <footer className="bg-black text-white px-20 py-10">
+      <footer className="bg-black text-white px-20 py-10 mt-5">
         <div className="container mx-auto flex flex-col md:flex-row justify-between gap-x-5">
           {/* Mission Column */}
           <div className="w-full md:w-1/3 mb-4 md:mb-0">

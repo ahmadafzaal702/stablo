@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "password is required"],
     },
+    profilePic: {
+      type: String,
+      required: [true, "Profile picture is required"],
+    },
     token: {
       type: String,
     },

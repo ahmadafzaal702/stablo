@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 
 // custom imports
 import { Wrapper } from "@/components";
+import axios from "axios";
 
 // Signup FC
 const SignupPage = () => {
@@ -15,7 +16,9 @@ const SignupPage = () => {
     username: "",
     email: "",
     password: "",
+    profilePic: "",
   });
+  const [profilePicPreview, setProfilePicPreview] = useState("");
 
   // useState to manage the error or messages
   const [status, setStatus] = useState("");
@@ -24,6 +27,7 @@ const SignupPage = () => {
 
   // input change handler
   const inputChangeHandler = (event: any) => {
+    setStatus("");
     const { name, value } = event.target;
     setInput((preValue) => {
       return {
@@ -33,31 +37,49 @@ const SignupPage = () => {
     });
   };
 
+  // onImageChangeHandler
+  const onImageChangeHandler = (e: any) => {
+    setStatus("");
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState == 2) {
+        setProfilePicPreview(reader.result as any);
+      }
+    };
+    setInput({
+      ...input,
+      profilePic: e.target.files[0],
+    });
+    reader.readAsDataURL(e.target.files[0]);
+  };
+
   // form submit handler
   const formSubmitHandler = async (event: any) => {
     event.preventDefault();
 
-    if (input.username === "" || input.email === "" || input.password === "") {
+    if (
+      input.username.trim() === "" ||
+      input.email.trim() === "" ||
+      input.password.trim() === "" ||
+      !input.profilePic
+    ) {
       setStatus("Please fill all the fields");
+      toast.error("Please fill all the fields");
       return;
     }
 
+    const formData = new FormData();
+    formData.append("username", input.username);
+    formData.append("email", input.email);
+    formData.append("password", input.password);
+    formData.append("profilePic", input.profilePic);
+
     // submitting user
     try {
-      const res = await fetch("/api/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/Json" },
-        body: JSON.stringify(input),
-      });
-      const data = await res.json();
+      const res = await axios.post("/api/users", formData);
+      const data = res.data;
 
-      // const { data } = await axios.post("/api/v1/user/register", {
-      //   username: input.username,
-      //   email: input.email,
-      //   password: input.password,
-      // });
-
-      if (data.success) {
+      if (data?.success) {
         // show toast and message
         toast.success(data.message);
         setStatus(data.message);
@@ -67,18 +89,19 @@ const SignupPage = () => {
           username: "",
           email: "",
           password: "",
+          profilePic: "",
         });
 
         // navigate to login page after 1 seconds
         setTimeout(() => {
-          router.push("/login");
-        }, 1000);
-      } else {
-        toast.error(data.message);
-        setStatus(data.message);
+          router.push("/accounts/login");
+        }, 500);
       }
-    } catch (error) {
+      // try block ends here
+    } catch (error: any) {
       console.log("Error in create account submission: ", error);
+      toast.error(error.response.data.message);
+      setStatus(error.response.data.message);
     }
   };
 
@@ -142,6 +165,30 @@ const SignupPage = () => {
                     onChange={inputChangeHandler}
                     className="userFormInput"
                   />
+                </div>
+              </div>
+              {/* profile picture */}
+              <div>
+                <div>
+                  <label htmlFor="profilePic" className="userFormLabel">
+                    Profile Picture
+                  </label>
+                </div>
+                <div className="mt-2">
+                  <input
+                    type="file"
+                    name="profilePic"
+                    className="userFormInput"
+                    onChange={onImageChangeHandler}
+                  />
+
+                  <div
+                    className={`mt-2 border border-gray-medium rounded-md w-24 h-24 ${
+                      profilePicPreview ? "block" : "hidden"
+                    }`}
+                  >
+                    <img src={profilePicPreview} className="w-full h-full" />
+                  </div>
                 </div>
               </div>
 

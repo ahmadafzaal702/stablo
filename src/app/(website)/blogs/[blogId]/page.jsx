@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Wrapper } from "@/components";
+import moment from "moment/moment";
 
 // Blog Page FC
 const BlogPage = ({ params }) => {
@@ -45,16 +46,31 @@ const BlogPage = ({ params }) => {
         <Wrapper>
           <div className="container mx-auto mt-8 p-8">
             <h1 className="text-3xl font-semibold mb-4">{data?.blog?.title}</h1>
+            <p className="text-gray-600 mb-4 mt-2">
+              {" "}
+              Blog Created:{" "}
+              <span className="font-semibold">
+                {moment(data?.blog?.createdAt).format("MM/DD/YYYY")}
+              </span>
+            </p>
+
             <img
               className="w-full h-[500px] object-cover object-center"
               src={data?.blog?.imageUrl}
               alt="blog picture"
             />
 
-            {/* <p className="text-gray-500 mb-2">{data?.blog?.content}</p> */}
             <div className="bg-white p-6 rounded-lg shadow-md">
               <p className="text-gray-800">{data?.blog?.content}</p>
             </div>
+
+            <p className="text-gray-600 mb-4 mt-2">
+              {" "}
+              Last Updated At:{" "}
+              <span className="font-semibold">
+                {moment(data?.blog?.updatedAt).format("MM/DD/YYYY")}
+              </span>
+            </p>
           </div>
         </Wrapper>
       </main>
